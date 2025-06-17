@@ -1,5 +1,7 @@
 
-import { Store, ShoppingCart, CreditCard, FileText, BarChart3 } from "lucide-react";
+import { Store, ShoppingCart, CreditCard, FileText, BarChart3, LogOut } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@/components/ui/button";
 
 interface SidebarProps {
   activeTab: string;
@@ -7,6 +9,8 @@ interface SidebarProps {
 }
 
 export const Sidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
+  const { logout, user } = useAuth();
+
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: BarChart3 },
     { id: "stores", label: "Store Management", icon: Store },
@@ -15,12 +19,19 @@ export const Sidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
     { id: "billing", label: "Billing", icon: FileText },
   ];
 
+  const handleLogout = () => {
+    logout();
+  };
+
   return (
-    <div className="w-64 bg-white shadow-lg">
+    <div className="w-64 bg-white shadow-lg flex flex-col h-full">
       <div className="p-6 border-b">
         <h1 className="text-xl font-bold text-gray-800">Business Manager</h1>
+        {user && (
+          <p className="text-sm text-gray-600 mt-1">Welcome, {user.email}</p>
+        )}
       </div>
-      <nav className="mt-6">
+      <nav className="mt-6 flex-1">
         {menuItems.map((item) => {
           const Icon = item.icon;
           return (
@@ -39,6 +50,16 @@ export const Sidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
           );
         })}
       </nav>
+      <div className="p-6 border-t">
+        <Button
+          onClick={handleLogout}
+          variant="outline"
+          className="w-full flex items-center justify-center"
+        >
+          <LogOut className="mr-2 h-4 w-4" />
+          Logout
+        </Button>
+      </div>
     </div>
   );
 };

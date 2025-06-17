@@ -6,9 +6,12 @@ import { StoreManagement } from "@/components/StoreManagement";
 import { OrderManagement } from "@/components/OrderManagement";
 import { PaymentManagement } from "@/components/PaymentManagement";
 import { BillingManagement } from "@/components/BillingManagement";
+import { Login } from "@/components/Login";
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 
-const Index = () => {
+const AppContent = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
+  const { isAuthenticated } = useAuth();
 
   const renderContent = () => {
     switch (activeTab) {
@@ -27,6 +30,10 @@ const Index = () => {
     }
   };
 
+  if (!isAuthenticated) {
+    return <Login />;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex">
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -34,6 +41,14 @@ const Index = () => {
         {renderContent()}
       </main>
     </div>
+  );
+};
+
+const Index = () => {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 };
 
